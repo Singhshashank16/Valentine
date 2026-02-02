@@ -34,7 +34,7 @@
 
     .buttons {
       position: relative;
-      height: 140px;
+      height: 150px;
     }
 
     button {
@@ -43,8 +43,8 @@
       border-radius: 30px;
       border: none;
       cursor: pointer;
-      transition: transform 0.2s ease;
       position: absolute;
+      transition: transform 0.2s ease;
     }
 
     #yes {
@@ -58,8 +58,8 @@
     #no {
       background: #adb5bd;
       color: #333;
-      right: 20px;
-      top: 70px;
+      top: 80px;
+      left: 60%;
     }
 
     /* Sunflowers */
@@ -84,7 +84,7 @@
 </head>
 <body>
 
-  <!-- Background music -->
+  <!-- Background Music -->
   <audio id="music" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
   </audio>
@@ -101,41 +101,63 @@
   <script>
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
+    const card = document.querySelector(".card");
     const music = document.getElementById("music");
 
-    function moveNoButton() {
-      const card = document.querySelector(".card");
+    function moveNoRandomly() {
       const rect = card.getBoundingClientRect();
+      const padding = 20;
 
-      const maxX = rect.width - noBtn.offsetWidth;
-      const maxY = rect.height - noBtn.offsetHeight;
+      const x = Math.random() * (rect.width - noBtn.offsetWidth - padding);
+      const y = Math.random() * (rect.height - noBtn.offsetHeight - padding);
 
-      noBtn.style.left = Math.random() * maxX + "px";
-      noBtn.style.top = Math.random() * maxY + "px";
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
 
+    function handlePointer(x, y) {
       const noRect = noBtn.getBoundingClientRect();
       const yesRect = yesBtn.getBoundingClientRect();
 
-      const distance = Math.hypot(
-        noRect.x - yesRect.x,
-        noRect.y - yesRect.y
-      );
+      const noX = noRect.left + noRect.width / 2;
+      const noY = noRect.top + noRect.height / 2;
+      const yesX = yesRect.left + yesRect.width / 2;
+      const yesY = yesRect.top + yesRect.height / 2;
 
-      if (distance < 120) {
-        yesBtn.style.transform = "translateX(-50%) scale(1.35)";
+      const distanceToNo = Math.hypot(x - noX, y - noY);
+      const distanceNoToYes = Math.hypot(noX - yesX, noY - yesY);
+
+      // No escapes BEFORE you reach it
+      if (distanceToNo < 90) {
+        moveNoRandomly();
+      }
+
+      // Yes grows when No comes close
+      if (distanceNoToYes < 160) {
+        yesBtn.style.transform = "translateX(-50%) scale(1.6)";
       } else {
         yesBtn.style.transform = "translateX(-50%) scale(1)";
       }
     }
 
-    noBtn.addEventListener("mouseenter", moveNoButton);
-    noBtn.addEventListener("touchstart", moveNoButton);
+    // Desktop support
+    document.addEventListener("mousemove", (e) => {
+      handlePointer(e.clientX, e.clientY);
+    });
+
+    // Mobile support
+    document.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      handlePointer(touch.clientX, touch.clientY);
+    });
+
+    // Initial position
+    moveNoRandomly();
 
     yesBtn.addEventListener("click", () => {
-      // Play music on YES (guaranteed)
       music.play();
 
-      // Start sunflower rain
+      // Sunflower rain 🌻
       setInterval(() => {
         const flower = document.createElement("div");
         flower.className = "sunflower";
@@ -144,9 +166,8 @@
         flower.style.fontSize = (24 + Math.random() * 20) + "px";
         flower.style.animationDuration = (3 + Math.random() * 3) + "s";
         document.body.appendChild(flower);
-
         setTimeout(() => flower.remove(), 7000);
-      }, 300);
+      }, 250);
 
       // Final message
       document.body.innerHTML = `
