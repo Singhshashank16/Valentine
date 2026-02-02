@@ -16,26 +16,6 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    /* Floating hearts */
-    .heart {
-      position: absolute;
-      bottom: -20px;
-      font-size: 20px;
-      animation: floatUp 6s linear infinite;
-      opacity: 0.8;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) scale(1.5);
-        opacity: 0;
-      }
-    }
-
     .card {
       background: white;
       padding: 40px;
@@ -43,7 +23,7 @@
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       position: relative;
-      width: 340px;
+      width: 360px;
       z-index: 2;
     }
 
@@ -59,122 +39,4 @@
 
     button {
       padding: 12px 28px;
-      font-size: 18px;
-      border-radius: 30px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      position: absolute;
-    }
-
-    #yes {
-      background: #e63946;
-      color: white;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-    }
-
-    #no {
-      background: #adb5bd;
-      color: #333;
-      right: 20px;
-      top: 70px;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: #777;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Background music -->
-  <audio id="music" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
-  </audio>
-
-  <div class="card">
-    <h1>Will you be my Valentine? 💘</h1>
-
-    <div class="buttons">
-      <button id="yes">Yes 💖</button>
-      <button id="no">No 🙃</button>
-    </div>
-
-    <div class="hint">(Tap anywhere 💕)</div>
-  </div>
-
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const music = document.getElementById("music");
-
-    // Start music on first interaction
-    document.body.addEventListener("click", () => {
-      music.play().catch(() => {});
-    }, { once: true });
-
-    function moveNoButton() {
-      const card = document.querySelector(".card");
-      const rect = card.getBoundingClientRect();
-
-      const maxX = rect.width - noBtn.offsetWidth;
-      const maxY = rect.height - noBtn.offsetHeight;
-
-      noBtn.style.left = Math.random() * maxX + "px";
-      noBtn.style.top = Math.random() * maxY + "px";
-
-      const noRect = noBtn.getBoundingClientRect();
-      const yesRect = yesBtn.getBoundingClientRect();
-
-      const distance = Math.hypot(
-        noRect.x - yesRect.x,
-        noRect.y - yesRect.y
-      );
-
-      if (distance < 120) {
-        yesBtn.style.transform = "translateX(-50%) scale(1.35)";
-      } else {
-        yesBtn.style.transform = "translateX(-50%) scale(1)";
-      }
-    }
-
-    noBtn.addEventListener("mouseenter", moveNoButton);
-    noBtn.addEventListener("touchstart", moveNoButton);
-
-    yesBtn.addEventListener("click", () => {
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:linear-gradient(135deg,#ff758c,#ff7eb3);
-          font-family:Segoe UI;
-          color:white;
-          text-align:center;
-        ">
-          <h1>Yayyyy 💕<br>You’re my Valentine forever 🥰</h1>
-        </div>
-      `;
-    });
-
-    // Floating hearts generator
-    setInterval(() => {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerText = "💖";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = (16 + Math.random() * 20) + "px";
-      heart.style.animationDuration = (4 + Math.random() * 4) + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 8000);
-    }, 400);
-  </script>
-
-</body>
-</html>
+      f
