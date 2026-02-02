@@ -39,4 +39,133 @@
 
     button {
       padding: 12px 28px;
-      f
+      font-size: 18px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      position: absolute;
+    }
+
+    #yes {
+      background: #e63946;
+      color: white;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    #no {
+      background: #adb5bd;
+      color: #333;
+      right: 20px;
+      top: 70px;
+    }
+
+    /* Sunflowers */
+    .sunflower {
+      position: absolute;
+      bottom: -20px;
+      font-size: 28px;
+      animation: floatUp 5s linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh) scale(1.4);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background music -->
+  <audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card">
+    <h1>Paaky! Will you be my Valentine ? 💖</h1>
+
+    <div class="buttons">
+      <button id="yes">Yes 🌻</button>
+      <button id="no">No 🙃</button>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const music = document.getElementById("music");
+
+    function moveNoButton() {
+      const card = document.querySelector(".card");
+      const rect = card.getBoundingClientRect();
+
+      const maxX = rect.width - noBtn.offsetWidth;
+      const maxY = rect.height - noBtn.offsetHeight;
+
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
+
+      const noRect = noBtn.getBoundingClientRect();
+      const yesRect = yesBtn.getBoundingClientRect();
+
+      const distance = Math.hypot(
+        noRect.x - yesRect.x,
+        noRect.y - yesRect.y
+      );
+
+      if (distance < 120) {
+        yesBtn.style.transform = "translateX(-50%) scale(1.35)";
+      } else {
+        yesBtn.style.transform = "translateX(-50%) scale(1)";
+      }
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton);
+
+    yesBtn.addEventListener("click", () => {
+      // Play music on YES (guaranteed)
+      music.play();
+
+      // Start sunflower rain
+      setInterval(() => {
+        const flower = document.createElement("div");
+        flower.className = "sunflower";
+        flower.innerText = "🌻";
+        flower.style.left = Math.random() * 100 + "vw";
+        flower.style.fontSize = (24 + Math.random() * 20) + "px";
+        flower.style.animationDuration = (3 + Math.random() * 3) + "s";
+        document.body.appendChild(flower);
+
+        setTimeout(() => flower.remove(), 7000);
+      }, 300);
+
+      // Final message
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:linear-gradient(135deg,#ff758c,#ff7eb3);
+          font-family:Segoe UI;
+          color:white;
+          text-align:center;
+          padding:20px;
+        ">
+          <h1>🌻<br>Isi baat pe ek baar aur<br><strong>Banaras ho Jaye!</strong> 💛</h1>
+        </div>
+      `;
+    });
+  </script>
+
+</body>
+</html>
