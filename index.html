@@ -8,7 +8,6 @@
     body {
       height: 100vh;
       margin: 0;
-      overflow: hidden;
       background: linear-gradient(135deg, #ffdde1, #ee9ca7);
       display: flex;
       align-items: center;
@@ -18,56 +17,53 @@
 
     .card {
       background: white;
-      padding: 40px;
-      border-radius: 20px;
+      padding: 40px 30px;
+      border-radius: 22px;
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      position: relative;
-      width: 360px;
-      z-index: 2;
+      width: 340px;
     }
 
     h1 {
       color: #e63946;
       margin-bottom: 30px;
+      font-size: 22px;
     }
 
     .buttons {
-      position: relative;
-      height: 150px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      gap: 20px;
     }
 
     button {
-      padding: 12px 28px;
+      flex: 1;
+      padding: 14px 0;
       font-size: 18px;
       border-radius: 30px;
       border: none;
       cursor: pointer;
-      position: absolute;
-      transition: transform 0.2s ease;
+      transition: all 0.35s ease;
     }
 
     #yes {
       background: #e63946;
       color: white;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
     }
 
     #no {
       background: #adb5bd;
       color: #333;
-      top: 80px;
-      left: 60%;
     }
 
     /* Sunflowers */
     .sunflower {
-      position: absolute;
-      bottom: -20px;
+      position: fixed;
+      bottom: -30px;
       font-size: 28px;
       animation: floatUp 5s linear infinite;
+      pointer-events: none;
     }
 
     @keyframes floatUp {
@@ -89,7 +85,7 @@
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
   </audio>
 
-  <div class="card">
+  <div class="card" id="card">
     <h1>Paaky! Will you be my Valentine ? 💖</h1>
 
     <div class="buttons">
@@ -101,58 +97,32 @@
   <script>
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
-    const card = document.querySelector(".card");
     const music = document.getElementById("music");
+    const card = document.getElementById("card");
 
-    function moveNoRandomly() {
-      const rect = card.getBoundingClientRect();
-      const padding = 20;
+    let noClicks = 0;
 
-      const x = Math.random() * (rect.width - noBtn.offsetWidth - padding);
-      const y = Math.random() * (rect.height - noBtn.offsetHeight - padding);
+    const noTexts = [
+      "Are you sure? 😶",
+      "Really sure? 😐",
+      "Think again 🥺"
+    ];
 
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
-    }
+    noBtn.addEventListener("click", () => {
+      noClicks++;
 
-    function handlePointer(x, y) {
-      const noRect = noBtn.getBoundingClientRect();
-      const yesRect = yesBtn.getBoundingClientRect();
-
-      const noX = noRect.left + noRect.width / 2;
-      const noY = noRect.top + noRect.height / 2;
-      const yesX = yesRect.left + yesRect.width / 2;
-      const yesY = yesRect.top + yesRect.height / 2;
-
-      const distanceToNo = Math.hypot(x - noX, y - noY);
-      const distanceNoToYes = Math.hypot(noX - yesX, noY - yesY);
-
-      // No escapes BEFORE you reach it
-      if (distanceToNo < 90) {
-        moveNoRandomly();
+      if (noClicks <= 3) {
+        noBtn.textContent = noTexts[noClicks - 1];
+        noBtn.style.transform = `scale(${1 - noClicks * 0.2})`;
+        noBtn.style.opacity = `${1 - noClicks * 0.3}`;
       }
 
-      // Yes grows when No comes close
-      if (distanceNoToYes < 160) {
-        yesBtn.style.transform = "translateX(-50%) scale(1.6)";
-      } else {
-        yesBtn.style.transform = "translateX(-50%) scale(1)";
+      if (noClicks === 3) {
+        setTimeout(() => {
+          noBtn.style.display = "none";
+        }, 300);
       }
-    }
-
-    // Desktop support
-    document.addEventListener("mousemove", (e) => {
-      handlePointer(e.clientX, e.clientY);
     });
-
-    // Mobile support
-    document.addEventListener("touchmove", (e) => {
-      const touch = e.touches[0];
-      handlePointer(touch.clientX, touch.clientY);
-    });
-
-    // Initial position
-    moveNoRandomly();
 
     yesBtn.addEventListener("click", () => {
       music.play();
@@ -163,27 +133,18 @@
         flower.className = "sunflower";
         flower.innerText = "🌻";
         flower.style.left = Math.random() * 100 + "vw";
-        flower.style.fontSize = (24 + Math.random() * 20) + "px";
+        flower.style.fontSize = (24 + Math.random() * 18) + "px";
         flower.style.animationDuration = (3 + Math.random() * 3) + "s";
         document.body.appendChild(flower);
         setTimeout(() => flower.remove(), 7000);
-      }, 250);
+      }, 300);
 
-      // Final message
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:linear-gradient(135deg,#ff758c,#ff7eb3);
-          font-family:Segoe UI;
-          color:white;
-          text-align:center;
-          padding:20px;
-        ">
-          <h1>🌻<br>Isi baat pe ek baar aur<br><strong>Banaras ho Jaye!</strong> 💛</h1>
-        </div>
+      card.innerHTML = `
+        <h1 style="font-size:24px;">
+          🌻<br>
+          Isi baat pe ek baar aur<br>
+          <strong>Banaras ho Jaye!</strong> 💛
+        </h1>
       `;
     });
   </script>
