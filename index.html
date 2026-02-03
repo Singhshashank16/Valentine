@@ -14,6 +14,7 @@
       justify-content: center;
       font-family: 'Segoe UI', sans-serif;
     }
+
     .card {
       background: white;
       padding: 40px 30px;
@@ -22,17 +23,20 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       width: 340px;
     }
+
     h1 {
       color: #e63946;
       margin-bottom: 30px;
       font-size: 22px;
     }
+
     .buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 30px;
       gap: 20px;
     }
+
     button {
       flex: 1;
       padding: 14px 0;
@@ -40,11 +44,33 @@
       border-radius: 30px;
       border: none;
       cursor: pointer;
-      transition: all 0.35s ease;
+      transition: all 0.4s ease;
     }
-    #yes { background: #e63946; color: white; }
-    #no { background: #adb5bd; color: #333; }
 
+    #yes {
+      background: #e63946;
+      color: white;
+    }
+
+    #no {
+      background: #adb5bd;
+      color: #333;
+    }
+
+    /* Flash screen */
+    .flash {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      color: white;
+      text-align: center;
+      font-size: 22px;
+      padding: 20px;
+    }
+
+    /* Sunflowers */
     .sunflower {
       position: fixed;
       bottom: -30px;
@@ -52,20 +78,29 @@
       animation: floatUp 5s linear infinite;
       pointer-events: none;
     }
+
     @keyframes floatUp {
-      from { transform: translateY(0) scale(1); opacity: 1; }
-      to { transform: translateY(-110vh) scale(1.4); opacity: 0; }
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh) scale(1.4);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Background Music -->
   <audio id="music" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
   </audio>
 
   <div class="card" id="card">
     <h1>Paaky! Will you be my Valentine ? 💖</h1>
+
     <div class="buttons">
       <button id="yes">Yes 🌻</button>
       <button id="no">No 🙃</button>
@@ -75,71 +110,100 @@
   <script>
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
-    const music = document.getElementById("music");
     const card = document.getElementById("card");
+    const music = document.getElementById("music");
 
-    let noClicks = 0;
-    const noTexts = [
-      "Are you sure? 😶",
-      "Really sure? 😐",
-      "Think again 🥺"
-    ];
-
+    /* NO clicked — one time drama */
     noBtn.addEventListener("click", () => {
-      noClicks++;
-      if (noClicks <= 3) {
-        noBtn.textContent = noTexts[noClicks - 1];
-        noBtn.style.transform = `scale(${1 - noClicks * 0.2})`;
-        noBtn.style.opacity = `${1 - noClicks * 0.3}`;
-      }
-      if (noClicks === 3) {
-        setTimeout(() => noBtn.style.display = "none", 300);
-      }
+      // Fade NO immediately
+      noBtn.style.opacity = "0";
+      noBtn.style.transform = "scale(0.6)";
+      noBtn.style.pointerEvents = "none";
+
+      // Flash message
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div class="flash">
+            <strong>
+              Just like your PF withdrawal is rejected,<br>
+              we will reject your No 😌
+            </strong>
+          </div>
+        `;
+      }, 300);
+
+      // Bring back card with ONLY YES
+      setTimeout(() => {
+        document.body.innerHTML = "";
+        document.body.appendChild(card);
+        noBtn.style.display = "none";
+      }, 1600);
     });
 
+    /* YES clicked */
     yesBtn.addEventListener("click", () => {
       music.play();
 
+      // Flash gratitude
       document.body.innerHTML = `
-        <div style="
-          height:100vh; display:flex; align-items:center; justify-content:center;
-          background:#000; font-family:Segoe UI; color:white; text-align:center;
-          flex-direction:column;
-        ">
-          <div style="font-size:26px; margin-bottom:20px;">
-            <strong>Shukriya! Your choice matters! 💛</strong>
-          </div>
-          <img 
-            src="https://i.imgur.com/l9NwyiI.gif" 
-            alt="When she says yes" 
-            style="max-width:85%; border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);" 
-          />
+        <div class="flash">
+          <strong>Shukriya!<br>Your choice matters! 💛</strong>
         </div>
       `;
 
+      // Meme screen
       setTimeout(() => {
         document.body.innerHTML = `
           <div style="
-            height:100vh; display:flex; align-items:center; justify-content:center;
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#111;
+            padding:20px;
+          ">
+            <img 
+              src="https://i.imgur.com/l9NwyiI.gif"
+              alt="When she says yes"
+              style="
+                max-width:85%;
+                border-radius:18px;
+                box-shadow:0 20px 40px rgba(0,0,0,0.5);
+              "
+            />
+          </div>
+        `;
+      }, 1200);
+
+      // Final sunflower celebration
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style="
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
             background:linear-gradient(135deg,#ffdde1,#ee9ca7);
-            font-family:Segoe UI; color:white; text-align:center; padding:20px;
+            font-family:Segoe UI;
+            color:white;
+            text-align:center;
+            padding:20px;
           ">
             <h1>🌻 Yayyy! 🌻</h1>
           </div>
         `;
+
         setInterval(() => {
           const f = document.createElement("div");
+          f.className = "sunflower";
           f.innerText = "🌻";
-          f.style.position = "fixed";
-          f.style.bottom = "-30px";
           f.style.left = Math.random() * 100 + "vw";
           f.style.fontSize = (24 + Math.random() * 18) + "px";
-          f.style.animation = "floatUp 5s linear infinite";
+          f.style.animationDuration = (3 + Math.random() * 3) + "s";
           document.body.appendChild(f);
           setTimeout(() => f.remove(), 7000);
         }, 300);
       }, 3200);
-
     });
   </script>
 
