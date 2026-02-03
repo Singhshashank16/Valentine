@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Valentine Scam💖</title>
+  <title>Be My Valentine 💖</title>
 
   <style>
     body {
@@ -49,7 +49,7 @@
     #yes { background: #e63946; color: white; }
     #no { background: #adb5bd; color: #333; }
 
-    /* Overlay for flash & meme */
+    /* Overlay */
     .overlay {
       position: fixed;
       inset: 0;
@@ -62,6 +62,14 @@
       font-size: 22px;
       padding: 20px;
       z-index: 10;
+
+      /* 🔥 CRITICAL FIX */
+      pointer-events: none;
+    }
+
+    .overlay.show {
+      display: flex;
+      pointer-events: auto;
     }
 
     .overlay img {
@@ -87,7 +95,7 @@
 </head>
 <body>
 
-  <!-- Audio never destroyed -->
+  <!-- Audio -->
   <audio id="music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
   </audio>
@@ -105,19 +113,19 @@
   <div class="overlay" id="overlay"></div>
 
   <script>
-    const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
     const overlay = document.getElementById("overlay");
     const card = document.getElementById("card");
     const music = document.getElementById("music");
 
     /* NO CLICK */
-    noBtn.addEventListener("click", () => {
+    noBtn.onclick = () => {
       noBtn.style.opacity = "0";
       noBtn.style.transform = "scale(0.6)";
       noBtn.style.pointerEvents = "none";
 
-      overlay.style.display = "flex";
+      overlay.classList.add("show");
       overlay.innerHTML = `
         <strong>
           Just like your PF withdrawal is rejected,<br>
@@ -125,33 +133,33 @@
         </strong>
       `;
 
-      // Flash for 5 seconds
       setTimeout(() => {
-        overlay.style.display = "none";
+        overlay.classList.remove("show");
         noBtn.style.display = "none";
       }, 5000);
-    });
+    };
 
-    /* YES CLICK — NOW WORKS */
-    yesBtn.addEventListener("click", async () => {
-      try { await music.play(); } catch (e) {}
+    /* YES CLICK — NOW 100% WORKING */
+    yesBtn.onclick = () => {
+      // 🔊 Play music (mobile-safe)
+      music.currentTime = 0;
+      music.play().catch(() => {});
 
-      // Gratitude flash
-      overlay.style.display = "flex";
+      overlay.classList.add("show");
       overlay.innerHTML = `
         <strong>Shukriya!<br>Your choice matters! 💛</strong>
       `;
 
-      // Meme after 1.2s
+      // Show meme
       setTimeout(() => {
         overlay.innerHTML = `
           <img src="https://i.imgur.com/l9NwyiI.gif" alt="When she says yes" />
         `;
       }, 1200);
 
-      // Meme visible for 5s, then celebration
+      // After 5 seconds → celebration
       setTimeout(() => {
-        overlay.style.display = "none";
+        overlay.classList.remove("show");
         card.style.display = "none";
 
         setInterval(() => {
@@ -164,7 +172,7 @@
           setTimeout(() => f.remove(), 7000);
         }, 300);
       }, 6200);
-    });
+    };
   </script>
 
 </body>
