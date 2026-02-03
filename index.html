@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Scam Link</title>
+  <title>Be My Valentine 💖</title>
 
   <style>
     body {
@@ -13,6 +13,14 @@
       align-items: center;
       justify-content: center;
       font-family: 'Segoe UI', sans-serif;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .card {
@@ -32,7 +40,6 @@
 
     .buttons {
       display: flex;
-      justify-content: space-between;
       gap: 20px;
     }
 
@@ -51,6 +58,7 @@
 
     .flash {
       height: 100vh;
+      width: 100vw;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -77,34 +85,36 @@
 </head>
 <body>
 
-  <!-- Background Music -->
-  <audio id="music" loop>
+  <!-- Audio stays alive always -->
+  <audio id="music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
   </audio>
 
-  <div class="card" id="card">
-    <h1>Paaky! Will you be my Valentine ? 💖</h1>
-    <div class="buttons">
-      <button id="yes">Yes 🌻</button>
-      <button id="no">No 🙃</button>
+  <div id="app">
+    <div class="card" id="card">
+      <h1>Paaky! Will you be my Valentine ? 💖</h1>
+      <div class="buttons">
+        <button id="yes">Yes 🌻</button>
+        <button id="no">No 🙃</button>
+      </div>
     </div>
   </div>
 
   <script>
+    const app = document.getElementById("app");
+    const card = document.getElementById("card");
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
-    const card = document.getElementById("card");
     const music = document.getElementById("music");
 
     /* NO CLICK */
     noBtn.addEventListener("click", () => {
-      // fade NO
       noBtn.style.opacity = "0";
       noBtn.style.transform = "scale(0.6)";
       noBtn.style.pointerEvents = "none";
 
       setTimeout(() => {
-        document.body.innerHTML = `
+        app.innerHTML = `
           <div class="flash">
             <strong>
               Just like your PF withdrawal is rejected,<br>
@@ -114,28 +124,29 @@
         `;
       }, 300);
 
-      // show flash for 3 seconds
+      // Flash for 5 seconds
       setTimeout(() => {
-        document.body.innerHTML = "";
-        document.body.appendChild(card);
+        app.innerHTML = "";
+        app.appendChild(card);
         noBtn.style.display = "none";
-      }, 3300);
+      }, 5300);
     });
 
     /* YES CLICK */
-    yesBtn.addEventListener("click", () => {
-      music.play();
+    yesBtn.addEventListener("click", async () => {
+      // Start music safely
+      try { await music.play(); } catch (e) {}
 
-      // gratitude flash
-      document.body.innerHTML = `
+      // Gratitude flash
+      app.innerHTML = `
         <div class="flash">
           <strong>Shukriya!<br>Your choice matters! 💛</strong>
         </div>
       `;
 
-      // meme after flash
+      // Show meme
       setTimeout(() => {
-        document.body.innerHTML = `
+        app.innerHTML = `
           <div style="
             height:100vh;
             display:flex;
@@ -157,9 +168,9 @@
         `;
       }, 1200);
 
-      // meme visible for 5 seconds
+      // Meme visible for 5 seconds
       setTimeout(() => {
-        document.body.innerHTML = `
+        app.innerHTML = `
           <div style="
             height:100vh;
             display:flex;
@@ -175,18 +186,16 @@
           </div>
         `;
 
-        // sunflower rain
         setInterval(() => {
           const f = document.createElement("div");
           f.className = "sunflower";
           f.innerText = "🌻";
           f.style.left = Math.random() * 100 + "vw";
           f.style.fontSize = (24 + Math.random() * 18) + "px";
-          f.style.animationDuration = (3 + Math.random() * 3) + "s";
           document.body.appendChild(f);
           setTimeout(() => f.remove(), 7000);
         }, 300);
-      }, 6200); // 1.2s flash + 5s meme
+      }, 6200);
     });
   </script>
 
