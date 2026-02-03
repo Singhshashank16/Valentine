@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Valentine Scam</title>
+  <title>Be My Valentine 💖</title>
 
   <style>
     body {
@@ -15,14 +15,6 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    #app {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .card {
       background: white;
       padding: 40px 30px;
@@ -30,6 +22,7 @@
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       width: 340px;
+      z-index: 1;
     }
 
     h1 {
@@ -56,17 +49,25 @@
     #yes { background: #e63946; color: white; }
     #no { background: #adb5bd; color: #333; }
 
-    .flash {
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* Overlay for flash & meme */
+    .overlay {
+      position: fixed;
+      inset: 0;
       background: #000;
       color: white;
+      display: none;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       font-size: 22px;
       padding: 20px;
+      z-index: 10;
+    }
+
+    .overlay img {
+      max-width: 85%;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
     .sunflower {
@@ -75,6 +76,7 @@
       font-size: 28px;
       animation: floatUp 5s linear infinite;
       pointer-events: none;
+      z-index: 5;
     }
 
     @keyframes floatUp {
@@ -85,26 +87,28 @@
 </head>
 <body>
 
-  <!-- Audio stays alive always -->
+  <!-- Audio never destroyed -->
   <audio id="music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c6b48bfb1.mp3?filename=lovely-piano-112191.mp3" type="audio/mpeg">
   </audio>
 
-  <div id="app">
-    <div class="card" id="card">
-      <h1>Paaky! Will you be my Valentine ? 💖</h1>
-      <div class="buttons">
-        <button id="yes">Yes 🌻</button>
-        <button id="no">No 🙃</button>
-      </div>
+  <!-- Main card -->
+  <div class="card" id="card">
+    <h1>Paaky! Will you be my Valentine ? 💖</h1>
+    <div class="buttons">
+      <button id="yes">Yes 🌻</button>
+      <button id="no">No 🙃</button>
     </div>
   </div>
 
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
   <script>
-    const app = document.getElementById("app");
-    const card = document.getElementById("card");
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
+    const overlay = document.getElementById("overlay");
+    const card = document.getElementById("card");
     const music = document.getElementById("music");
 
     /* NO CLICK */
@@ -113,78 +117,42 @@
       noBtn.style.transform = "scale(0.6)";
       noBtn.style.pointerEvents = "none";
 
-      setTimeout(() => {
-        app.innerHTML = `
-          <div class="flash">
-            <strong>
-              Just like your PF withdrawal is rejected,<br>
-              we will reject your No 😌
-            </strong>
-          </div>
-        `;
-      }, 300);
+      overlay.style.display = "flex";
+      overlay.innerHTML = `
+        <strong>
+          Just like your PF withdrawal is rejected,<br>
+          we will reject your No 😌
+        </strong>
+      `;
 
       // Flash for 5 seconds
       setTimeout(() => {
-        app.innerHTML = "";
-        app.appendChild(card);
+        overlay.style.display = "none";
         noBtn.style.display = "none";
-      }, 5300);
+      }, 5000);
     });
 
-    /* YES CLICK */
+    /* YES CLICK — NOW WORKS */
     yesBtn.addEventListener("click", async () => {
-      // Start music safely
       try { await music.play(); } catch (e) {}
 
       // Gratitude flash
-      app.innerHTML = `
-        <div class="flash">
-          <strong>Shukriya!<br>Your choice matters! 💛</strong>
-        </div>
+      overlay.style.display = "flex";
+      overlay.innerHTML = `
+        <strong>Shukriya!<br>Your choice matters! 💛</strong>
       `;
 
-      // Show meme
+      // Meme after 1.2s
       setTimeout(() => {
-        app.innerHTML = `
-          <div style="
-            height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#111;
-            padding:20px;
-          ">
-            <img 
-              src="https://i.imgur.com/l9NwyiI.gif"
-              alt="When she says yes"
-              style="
-                max-width:85%;
-                border-radius:18px;
-                box-shadow:0 20px 40px rgba(0,0,0,0.5);
-              "
-            />
-          </div>
+        overlay.innerHTML = `
+          <img src="https://i.imgur.com/l9NwyiI.gif" alt="When she says yes" />
         `;
       }, 1200);
 
-      // Meme visible for 5 seconds
+      // Meme visible for 5s, then celebration
       setTimeout(() => {
-        app.innerHTML = `
-          <div style="
-            height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:linear-gradient(135deg,#ffdde1,#ee9ca7);
-            font-family:Segoe UI;
-            color:white;
-            text-align:center;
-            padding:20px;
-          ">
-            <h1>🌻 Yayyy! 🌻</h1>
-          </div>
-        `;
+        overlay.style.display = "none";
+        card.style.display = "none";
 
         setInterval(() => {
           const f = document.createElement("div");
