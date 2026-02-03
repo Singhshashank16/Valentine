@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Be My Valentine 💖</title>
+  <title>Scam Link</title>
 
   <style>
     body {
@@ -33,7 +33,6 @@
     .buttons {
       display: flex;
       justify-content: space-between;
-      margin-top: 30px;
       gap: 20px;
     }
 
@@ -47,17 +46,9 @@
       transition: all 0.4s ease;
     }
 
-    #yes {
-      background: #e63946;
-      color: white;
-    }
+    #yes { background: #e63946; color: white; }
+    #no { background: #adb5bd; color: #333; }
 
-    #no {
-      background: #adb5bd;
-      color: #333;
-    }
-
-    /* Flash screen */
     .flash {
       height: 100vh;
       display: flex;
@@ -70,7 +61,6 @@
       padding: 20px;
     }
 
-    /* Sunflowers */
     .sunflower {
       position: fixed;
       bottom: -30px;
@@ -80,14 +70,8 @@
     }
 
     @keyframes floatUp {
-      from {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-110vh) scale(1.4);
-        opacity: 0;
-      }
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to { transform: translateY(-110vh) scale(1.4); opacity: 0; }
     }
   </style>
 </head>
@@ -100,7 +84,6 @@
 
   <div class="card" id="card">
     <h1>Paaky! Will you be my Valentine ? 💖</h1>
-
     <div class="buttons">
       <button id="yes">Yes 🌻</button>
       <button id="no">No 🙃</button>
@@ -113,14 +96,13 @@
     const card = document.getElementById("card");
     const music = document.getElementById("music");
 
-    /* NO clicked — one time drama */
+    /* NO CLICK */
     noBtn.addEventListener("click", () => {
-      // Fade NO immediately
+      // fade NO
       noBtn.style.opacity = "0";
       noBtn.style.transform = "scale(0.6)";
       noBtn.style.pointerEvents = "none";
 
-      // Flash message
       setTimeout(() => {
         document.body.innerHTML = `
           <div class="flash">
@@ -132,26 +114,26 @@
         `;
       }, 300);
 
-      // Bring back card with ONLY YES
+      // show flash for 3 seconds
       setTimeout(() => {
         document.body.innerHTML = "";
         document.body.appendChild(card);
         noBtn.style.display = "none";
-      }, 1600);
+      }, 3300);
     });
 
-    /* YES clicked */
+    /* YES CLICK */
     yesBtn.addEventListener("click", () => {
       music.play();
 
-      // Flash gratitude
+      // gratitude flash
       document.body.innerHTML = `
         <div class="flash">
           <strong>Shukriya!<br>Your choice matters! 💛</strong>
         </div>
       `;
 
-      // Meme screen
+      // meme after flash
       setTimeout(() => {
         document.body.innerHTML = `
           <div style="
@@ -175,7 +157,7 @@
         `;
       }, 1200);
 
-      // Final sunflower celebration
+      // meme visible for 5 seconds
       setTimeout(() => {
         document.body.innerHTML = `
           <div style="
@@ -193,6 +175,7 @@
           </div>
         `;
 
+        // sunflower rain
         setInterval(() => {
           const f = document.createElement("div");
           f.className = "sunflower";
@@ -203,7 +186,7 @@
           document.body.appendChild(f);
           setTimeout(() => f.remove(), 7000);
         }, 300);
-      }, 3200);
+      }, 6200); // 1.2s flash + 5s meme
     });
   </script>
 
